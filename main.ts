@@ -19,6 +19,16 @@ type Objeto = {
     categoria: string
 }
 
+type CantidadCategoria = {
+    arma: number,
+    herramienta: number,
+    magico: number
+}
+
+
+
+const cantidadCategoriaInicial : CantidadCategoria = {arma:0,herramienta: 0,magico:0}
+
 const lugares: Lugar[] = [
   { id: 1, nombre: "Bosque Misterioso", tipo: "bosque", peligro: 2 },
   { id: 2, nombre: "Cueva Oscura", tipo: "cueva", peligro: 5 },
@@ -45,11 +55,14 @@ const listarLugares = (): void => {
     })
 }
 
-const buscarPersonaje = (nombreBuscado: string): Personaje[] => {
+const buscarPersonaje = (nombreBuscado: string): void => {
     const personajesBuscados = personajes.filter((personaje) =>{
-        return personaje.nombre === nombreBuscado
+         return (personaje.nombre.includes(nombreBuscado))
     })
-    return personajesBuscados
+    personajesBuscados.forEach((personaje) =>{
+    console.log(`${personaje.aliado} , ${personaje.fuerza}` )
+   })
+    
 }
 
 const inventarioConFrases = (): string[] => {
@@ -59,10 +72,31 @@ const inventarioConFrases = (): string[] => {
     return objetoFrases
 }
 
-const agruparObjetosPorCategoria = (): Record<string, number> =>{
+const objetosCategorias: CantidadCategoria  = {arma:0,herramienta: 0,magico:0}
+
+const agruparObjetosPorCategoria = (): CantidadCategoria => {
     const objetosCategorias = objetos.reduce((acc, objeto) =>{
-            return 
-    })
+        let aux: CantidadCategoria = {arma:0,herramienta:0, magico:0}
+            if(objeto.categoria === "arma"){ 
+                aux.arma = acc.arma+objeto.poder,
+                aux.herramienta= acc.herramienta,
+                aux.magico = acc.magico
+                return aux
+            }
+            else if(objeto.categoria === "herramienta") {
+                aux.arma = acc.arma,
+                aux.herramienta = acc.herramienta+objeto.poder,
+                aux.magico = acc.magico
+                return aux
+            }
+            else {
+                aux.arma = acc.arma,
+                aux.herramienta = acc.herramienta,
+                aux.magico = acc.magico+objeto.poder
+                return aux
+            }
+    },cantidadCategoriaInicial)
+    return objetosCategorias
 }
 
 const poderTotalInventario = (): number => {
@@ -74,9 +108,8 @@ const poderTotalInventario = (): number => {
 
 
 
-
 const main = (): void => {
-  const opcion: number = 3; // Cambia este número para probar
+  const opcion: number = 2; // Cambia este número para probar
  
   switch (opcion) {
     case 1:
@@ -99,3 +132,8 @@ const main = (): void => {
       console.log("Opción no válida.");
   }
 };
+
+
+main()
+
+
